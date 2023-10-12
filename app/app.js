@@ -1,111 +1,116 @@
 const http = require('http');
+const url = require('url');
 
 const PORT = 3000;
 const server = http.createServer(function (req, res) {
-    let [ url, queryString ] = req.url.split('?');
+    const parsedUrl = url.parse(req.url, true);
+    const pathName = parsedUrl.pathname;
 
-    if (url == '/index') {
+    if (pathName === '/index') {
         index(req, res);
-    }
-    else if (url == '/media') {
-        media(req, res);
-    }
-    else {
+    } else if (pathName === '/triacontagono') {
+        nomeSeuProblema(req, res, parsedUrl.query);
+    } else if (pathName === '/autor') {
+        autor(req, res);
+    } else {
         naoEncontrado(req, res);
     }
 });
 
 function index(req, res) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write(`<!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
     </head>
     <body>`);
-    res.write('<h1>Index!</h1>');
-    res.write('<form action="media" method="post">');
+    res.write('<h1>Problema: Calcular Área de Cerca</h1>');
+    res.write('<p>Descrição do problema:</p>');
+    res.write('<p>Calcule a área de uma cerca em forma de triacontágono. Se a área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena.</p>');
+    res.write('<form action="/triacontagono" method="get">');
     res.write('<label>');
     res.write('<span>Nome</span>');
     res.write('<input name="nome">');
     res.write('</label>');
     res.write('<label>');
-    res.write('<span>Nota1</span>');
-    res.write('<input name="nota1">');
+    res.write('<span>Tipo</span>');
+    res.write('<input name="tipo">');
     res.write('</label>');
     res.write('<label>');
-    res.write('<span>Nota1</span>');
-    res.write('<input name="nota2">');
+    res.write('<span>Lado</span>');
+    res.write('<input name="lado">');
     res.write('</label>');
-    res.write('<button>Ok</button>');
+    res.write('<button>Calcular</button>');
     res.write('</form>');
     res.write(`</body>
     </html>`);
     res.end();
 }
 
-function media(req, res) {
-    let metodo = req.method;
-    res.writeHead(200, {'Content-Type': 'text/html'});
+function nomeSeuProblema(req, res, query) {
+    const nome = query.nome;
+    const tipo = query.tipo;
+    const lado = parseFloat(query.lado);
+    const area = (30 * lado * lado) / (4 * (1 / Math.tan(Math.PI / 30)));
+    const motivo = "Calcule a área de uma cerca em forma de triacontágono. Se a área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena.";
+
+    res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write(`<!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
     </head>
     <body>`);
-    res.write('<h1>Média, ' + metodo + '!</h1>');
+    res.write(`<h1>Problema: Calcular Área de Cerca</h1>`);
+    res.write(`<p>Nome: ${nome}</p>`);
+    res.write(`<p>Tipo: ${tipo}</p>`);
+    res.write(`<p>Lado: ${lado}</p>`);
+    res.write(`<p>Área: ${area} metros quadrados</p>`);
+    res.write(`<p>Explicação da conta:</p>`);
+    res.write(`<p>${motivo}</p>`);
+    res.write(`</body>
+    </html>`);
+    res.end();
+}
 
-    let corpoTexto = '';
-    let i = 0;
-    req.on('data', function (pedaco) {
-        corpoTexto += pedaco;
-        console.log(i++, corpoTexto);
-    });
-    req.on('end', () => {
-        let query = decoficarUrl(corpoTexto);
-        
-        console.log(query);
-        let nome = query.nome;
-        let nota1 = parseFloat(query.nota1);
-        let nota2 = parseFloat(query['nota2']);
-        let media = (nota1 + nota2) / 2;
-
-        res.write(`<p>Olá, ${nome}. Você tirou ${nota1} e ${nota2}. Tem média ${media}.`);
-        if (media > 6) {
-            res.write('<p>Aprovado</p>');
-        }
-        else {
-            res.write('<p>Reprovado</p>');
-        }
-        res.write(`</body>
-        </html>`);
-        
-        res.end();
-    });
+function autor(req, res) {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.write(`<!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    </head>
+    <body>`);
+    res.write('<h1>Autor</h1>');
+    res.write('<p>Nome: George Paulo</p>');
+    res.write('<h2>Formações acadêmicas:</h2>');
+    res.write('<ul>');
+    res.write('<li>Técnico em Informártica para Internet</li>');
+    res.write('<li>Instituo Federal do Ceará</li>');
+    res.write('</ul>');
+    res.write('<h2>Experiências profissionais:</h2>');
+    res.write('<ul>');
+    res.write('<li>Militar do Exército Brasileiro</li>');
+    res.write('<li>Trabalhando atualmente com infraestruturada de TI</li>');
+    res.write('</ul>');
+    res.write(`</body>
+    </html>`);
+    res.end();
 }
 
 function naoEncontrado(req, res) {
-    res.writeHead(404, {'Content-Type': 'text/html'});
+    res.writeHead(404, { 'Content-Type': 'text/html' });
     res.write(`<!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
     </head>
     <body>`);
     res.write('<h1>Não encontrado!</h1>');
     res.write(`</body>
     </html>`);
     res.end();
-}
-
-function decoficarUrl(url) {
-    let propriedades = url.split('&');
-    let query = {};
-    for (let propriedade of propriedades) {
-        let [ variavel, valor ] = propriedade.split('=');
-        query[variavel] = valor;
-    }
-    return query;
 }
 
 server.listen(PORT, () => {
