@@ -9,7 +9,7 @@ const server = http.createServer(function (req, res) {
     if (pathName === '/index') {
         index(req, res);
     } else if (pathName === '/triacontagono') {
-        nomeSeuProblema(req, res, parsedUrl.query);
+        cercaQ(req, res, parsedUrl.query);
     } else if (pathName === '/autor') {
         autor(req, res);
     } else {
