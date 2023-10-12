@@ -48,7 +48,7 @@ function index(req, res) {
     res.end();
 }
 
-function nomeSeuProblema(req, res, query) {
+function cercaQ(req, res, query) {
     const nome = query.nome;
     const tipo = query.tipo;
     const lado = parseFloat(query.lado);
