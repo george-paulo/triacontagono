@@ -44,6 +44,9 @@ function index(req, res) {
     res.write('<button>Calcular</button>');
     res.write('</form>');
     res.write(`</body>
+    res.write('<footer>');
+    res.write('<p>Desenvolvido Por George Paulo</p>');
+    res.write('</footer>');
     </html>`);
     res.end();
 }
@@ -70,6 +73,9 @@ function cercaQ(req, res, query) {
     res.write(`<p>Explicação da conta:</p>`);
     res.write(`<p>${motivo}</p>`);
     res.write(`</body>
+    res.write('<footer>');
+    res.write('<p>Desenvolvido Por George Paulo</p>');
+    res.write('</footer>');
     </html>`);
     res.end();
 }
@@ -95,6 +101,9 @@ function autor(req, res) {
     res.write('<li>Trabalhando atualmente com infraestruturada de TI</li>');
     res.write('</ul>');
     res.write(`</body>
+    res.write('<footer>');
+    res.write('<p>Desenvolvido Por George Paulo</p>');
+    res.write('</footer>');
     </html>`);
     res.end();
 }
@@ -109,6 +118,9 @@ function naoEncontrado(req, res) {
     <body>`);
     res.write('<h1>Não encontrado!</h1>');
     res.write(`</body>
+    res.write('<footer>');
+    res.write('<p>Desenvolvido Por George Paulo</p>');
+    res.write('</footer>');
     </html>`);
     res.end();
 }
