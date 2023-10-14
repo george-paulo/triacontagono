@@ -18,7 +18,7 @@ const server = http.createServer(function (req, res) {
 });
 
 function index(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.write(`<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -56,7 +56,9 @@ function cercaQ(req, res, query) {
     const tipo = query.tipo;
     const lado = parseFloat(query.lado);
 
+    
     const area = (30 * lado * lado) / (4 * (1 / Math.tan(Math.PI / 30)));
+    
     
     let mensagem = "";
     if (area > 200) {
@@ -67,7 +69,7 @@ function cercaQ(req, res, query) {
     
     const motivo = "Calcule a área de uma cerca em forma de triacontágono. Se a área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena.";
 
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.write(`<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -81,7 +83,7 @@ function cercaQ(req, res, query) {
     res.write(`<p>Área: ${area} metros quadrados</p>`);
     res.write(`<p>Explicação da conta:</p>`);
     res.write(`<p>${motivo}</p>`);
-    res.write(`<p>${mensagem}</p>`;
+    res.write(`<p>${mensagem}</p>`);
     res.write('<footer>');
     res.write('<p>Desenvolvido Por George Paulo</p>');
     res.write('</footer>');
@@ -91,7 +93,7 @@ function cercaQ(req, res, query) {
 }
 
 function autor(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.write(`<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -121,7 +123,7 @@ function autor(req, res) {
 }
 
 function naoEncontrado(req, res) {
-    res.writeHead(404, { 'Content-Type': 'text/html' });
+    res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
     res.write(`<!DOCTYPE html>
     <html lang="en">
     <head>
