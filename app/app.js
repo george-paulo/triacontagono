@@ -56,10 +56,8 @@ function cercaQ(req, res, query) {
     const tipo = query.tipo;
     const lado = parseFloat(query.lado);
 
-    // Calcula a área
     const area = (30 * lado * lado) / (4 * (1 / Math.tan(Math.PI / 30)));
     
-    // Define a mensagem de acordo com o tamanho da cerca
     let mensagem = "";
     if (area > 200) {
         mensagem = "É uma cerca grande.";
@@ -83,7 +81,7 @@ function cercaQ(req, res, query) {
     res.write(`<p>Área: ${area} metros quadrados</p>`);
     res.write(`<p>Explicação da conta:</p>`);
     res.write(`<p>${motivo}</p>`);
-    res.write(`<p>${mensagem}</p>`; // Exibe se é uma cerca grande ou pequena
+    res.write(`<p>${mensagem}</p>`;
     res.write('<footer>');
     res.write('<p>Desenvolvido Por George Paulo</p>');
     res.write('</footer>');
