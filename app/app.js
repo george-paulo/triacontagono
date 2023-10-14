@@ -81,7 +81,7 @@ function cercaQ(req, res, query) {
     res.write(`<p>Área: ${area} metros quadrados</p>`);
     res.write(`<p>Explicação da conta:</p>`);
     res.write(`<p>${motivo}</p>`);
-    res.write(`<p>${mensagem}</p>`;
+    res.write(`<p>${mensagem}</p>`);
     res.write('<footer>');
     res.write('<p>Desenvolvido Por George Paulo</p>');
     res.write('</footer>');
