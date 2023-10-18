@@ -1,113 +1,72 @@
-const http = require('http');
+const express = require('express');
+const app = express();
+const CercaQController = require('./controllers/CercaQController');
+const AutorController = require('./controllers/AutorController');
+const EstaticoController = require('./controllers/EstaticoController');
+const bodyParser = require('body-parser');
+const CercaQ = require('./lib/triacontagono/CercaQ');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 
 const PORT = 3000;
-const server = http.createServer(function (req, res) {
-    let [ url, queryString ] = req.url.split('?');
 
-    if (url == '/index') {
-        index(req, res);
-    }
-    else if (url == '/media') {
-        media(req, res);
-    }
-    else {
-        naoEncontrado(req, res);
+const cercaQController = new CercaQController();
+const autorController = new AutorController();
+const estaticoController = new EstaticoController();
+
+app.get('/index', (req, res) => {
+    res.render('index');
+});
+
+app.get('/triacontagono', (req, res) => {
+    res.render('triacontagono', {
+        nome: '', 
+        tipo: '',
+        lado: '',
+        area: '',
+        mensagem: '',
+        motivo: ''
+    });
+});
+
+app.post('/triacontagono', (req, res) => {
+    const { nome, tipo, lado } = req.body;
+
+    if (isNaN(lado)) {
+        return res.render('triacontagono', {
+            nome,
+            tipo,
+            lado: 'Valor inválido',
+            area: 'Valor inválido',
+            mensagem: 'O valor do lado não é um número válido.',
+            motivo: 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.'
+        });
+    } else {
+        const area = CercaQ.calcularArea(lado);
+        const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
+        const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.';
+
+        res.render('triacontagono', {
+            nome,
+            tipo,
+            lado,
+            area,
+            mensagem,
+            motivo
+        });
     }
 });
 
-function index(req, res) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(`<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-    </head>
-    <body>`);
-    res.write('<h1>Index!</h1>');
-    res.write('<form action="media" method="post">');
-    res.write('<label>');
-    res.write('<span>Nome</span>');
-    res.write('<input name="nome">');
-    res.write('</label>');
-    res.write('<label>');
-    res.write('<span>Nota1</span>');
-    res.write('<input name="nota1">');
-    res.write('</label>');
-    res.write('<label>');
-    res.write('<span>Nota1</span>');
-    res.write('<input name="nota2">');
-    res.write('</label>');
-    res.write('<button>Ok</button>');
-    res.write('</form>');
-    res.write(`</body>
-    </html>`);
-    res.end();
-}
+app.get('/autor', (req, res) => {
+    autorController.index(req, res);
+});
 
-function media(req, res) {
-    let metodo = req.method;
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(`<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-    </head>
-    <body>`);
-    res.write('<h1>Média, ' + metodo + '!</h1>');
+app.use((req, res) => {
+    estaticoController.naoEncontrado(req, res);
+});
 
-    let corpoTexto = '';
-    let i = 0;
-    req.on('data', function (pedaco) {
-        corpoTexto += pedaco;
-        console.log(i++, corpoTexto);
-    });
-    req.on('end', () => {
-        let query = decoficarUrl(corpoTexto);
-        
-        console.log(query);
-        let nome = query.nome;
-        let nota1 = parseFloat(query.nota1);
-        let nota2 = parseFloat(query['nota2']);
-        let media = (nota1 + nota2) / 2;
-
-        res.write(`<p>Olá, ${nome}. Você tirou ${nota1} e ${nota2}. Tem média ${media}.`);
-        if (media > 6) {
-            res.write('<p>Aprovado</p>');
-        }
-        else {
-            res.write('<p>Reprovado</p>');
-        }
-        res.write(`</body>
-        </html>`);
-        
-        res.end();
-    });
-}
-
-function naoEncontrado(req, res) {
-    res.writeHead(404, {'Content-Type': 'text/html'});
-    res.write(`<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-    </head>
-    <body>`);
-    res.write('<h1>Não encontrado!</h1>');
-    res.write(`</body>
-    </html>`);
-    res.end();
-}
-
-function decoficarUrl(url) {
-    let propriedades = url.split('&');
-    let query = {};
-    for (let propriedade of propriedades) {
-        let [ variavel, valor ] = propriedade.split('=');
-        query[variavel] = valor;
-    }
-    return query;
-}
-
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
