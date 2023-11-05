@@ -1,6 +1,6 @@
 const math = require('mathjs');
 
-class CercaQ {
+class Cerca {
     static calcularArea(lado) {
         const pi = math.pi;
         const area = (30 * lado * lado) / (4 * (1 / math.tan(pi / 30)));
@@ -8,4 +8,4 @@ class CercaQ {
     }
 }
 
-module.exports = CercaQ;
+module.exports = Cerca;

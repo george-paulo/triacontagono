@@ -1,7 +1,7 @@
 {
-  "name": "Cerca Q",
+  "name": "Cerca",
   "version": "1.0.0",
-  "description": "Cerca Q",
+  "description": "Cerca",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js"

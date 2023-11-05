@@ -1,4 +1,6 @@
-class CercaQController {
+const Cerca = require('../lib/triacontagono/Cerca');
+
+class CercaController {
     cercaQ(req) {
         const query = req.query;
         const nome = query.nome;
@@ -10,7 +12,7 @@ class CercaQController {
                 error: 'O valor do lado não é um número válido.',
             };
         } else {
-            const area = CercaQ.calcularArea(lado);
+            const area = Cerca.calcularArea(lado);
             const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
             const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.';
             
@@ -27,4 +29,4 @@ class CercaQController {
         }
     }
 }
-module.exports = CercaQController;
+module.exports = CercaController;

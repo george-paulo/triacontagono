@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-const CercaQController = require('./controllers/CercaQController');
+const CercaController = require('./controllers/CercaController');
 const AutorController = require('./controllers/AutorController');
 const EstaticoController = require('./controllers/EstaticoController');
 const bodyParser = require('body-parser');
-const CercaQ = require('./lib/triacontagono/CercaQ');
+const Cerca = require('./lib/triacontagono/Cerca');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
@@ -12,7 +12,7 @@ app.set('views', __dirname + '/views');
 
 const PORT = 3000;
 
-const cercaQController = new CercaQController();
+const cercaController = new CercaController();
 const autorController = new AutorController();
 const estaticoController = new EstaticoController();
 
@@ -44,7 +44,7 @@ app.post('/triacontagono', (req, res) => {
             motivo: 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.'
         });
     } else {
-        const area = CercaQ.calcularArea(lado);
+        const area = Cerca.calcularArea(lado);
         const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
         const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.';
 
