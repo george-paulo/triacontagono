@@ -20,44 +20,15 @@ app.get('/index', (req, res) => {
     res.render('index');
 });
 
-app.get('/triacontagono', (req, res) => {
-    res.render('triacontagono', {
-        nome: '', 
-        tipo: '',
-        lado: '',
-        area: '',
-        mensagem: '',
-        motivo: ''
-    });
-});
+app.get('/triacontagono', cercaController.get);
 
-app.post('/triacontagono', (req, res) => {
-    const { nome, tipo, lado } = req.body;
+app.post('/triacontagono', cercaController.post);
 
-    if (isNaN(lado)) {
-        return res.render('triacontagono', {
-            nome,
-            tipo,
-            lado: 'Valor inválido',
-            area: 'Valor inválido',
-            mensagem: 'O valor do lado não é um número válido.',
-            motivo: 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.'
-        });
-    } else {
-        const area = Cerca.calcularArea(lado);
-        const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
-        const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.';
+// Rota PUT para atualizar os dados da cerca
+app.put('/triacontagono/:id', cercaController.put);
 
-        res.render('triacontagono', {
-            nome,
-            tipo,
-            lado,
-            area,
-            mensagem,
-            motivo
-        });
-    }
-});
+// Rota DELETE para excluir uma cerca
+app.delete('/triacontagono/:id', cercaController.delete);
 
 app.get('/autor', (req, res) => {
     autorController.index(req, res);
