@@ -1,3 +1,5 @@
+const Cerca = require('./Cerca');
+
 class CercaDao {
     constructor() {
         this.cercas = [];
