@@ -23,7 +23,6 @@ app.get('/index', (req, res) => {
 app.get('/triacontagono', (req, res) => {
     res.render('triacontagono', {
         nome: '', 
-        tipo: '',
         lado: '',
         area: '',
         mensagem: '',
@@ -32,12 +31,11 @@ app.get('/triacontagono', (req, res) => {
 });
 
 app.post('/triacontagono', (req, res) => {
-    const { nome, tipo, lado } = req.body;
+    const { nome, lado } = req.body;
 
     if (isNaN(lado)) {
         return res.render('triacontagono', {
             nome,
-            tipo,
             lado: 'Valor inválido',
             area: 'Valor inválido',
             mensagem: 'O valor do lado não é um número válido.',
@@ -50,7 +48,6 @@ app.post('/triacontagono', (req, res) => {
 
         res.render('triacontagono', {
             nome,
-            tipo,
             lado,
             area,
             mensagem,
