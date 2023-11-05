@@ -2,7 +2,7 @@ const Cerca = require('../lib/triacontagono/Cerca');
 
 class CercaController {
     cercaQ(req) {
-        const query = req.query;
+        const query = req.body;
         const nome = query.nome;
         const tipo = query.tipo;
         const lado = parseFloat(query.lado);
