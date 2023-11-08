@@ -3,13 +3,12 @@ const CercaDao = require('../lib/triacontagono/CercaDao');
 
 class CercaController {
     constructor() {
-        this.cercaDao = new CercaDao(); 
+        this.cercaDao = new CercaDao();
     }
 
     get(req, res) {
         res.render('triacontagono', {
-            nome: '', 
-            tipo: '',
+            nome: '',
             lado: '',
             area: '',
             mensagem: '',
@@ -18,12 +17,11 @@ class CercaController {
     }
 
     post(req, res) {
-        const { nome, tipo, lado } = req.body;
+        const { nome, lado } = req.body;
 
         if (isNaN(lado)) {
             return res.render('triacontagono', {
                 nome,
-                tipo,
                 lado: 'Valor inválido',
                 area: 'Valor inválido',
                 mensagem: 'O valor do lado não é um número válido.',
@@ -32,11 +30,10 @@ class CercaController {
         } else {
             const area = Cerca.calcularArea(lado);
             const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
-            const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena.';
-        
+            const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena';
+
             res.render('triacontagono', {
                 nome,
-                tipo,
                 lado,
                 area,
                 mensagem,
@@ -46,7 +43,7 @@ class CercaController {
     }
 
     put(req, res) {
-        const { nome, tipo, lado } = req.body;
+        const { nome, lado } = req.body;
         const id = req.params.id;
 
         if (isNaN(lado)) {
@@ -58,18 +55,12 @@ class CercaController {
 
             res.status(200).json({
                 nome,
-                tipo,
                 lado,
                 area,
                 mensagem,
                 motivo,
             });
         }
-    }
-
-    delete(req, res) {
-        const id = req.params.id;
-        res.status(200).json({ mensagem: 'Cerca excluída com sucesso' });
     }
 }
 

@@ -1,6 +1,7 @@
-const Cerca = require('./Cerca');
+const Cerca = require('../triacontagono/Cerca');
 
 class CercaDao {
+    
     constructor() {
         this.cercas = [];
     }
@@ -15,7 +16,6 @@ class CercaDao {
     }
 
     alterar(id, cerca) {
-        this.validar(cerca);
         if (id >= 0 && id < this.cercas.length) {
             this.cercas[id] = cerca;
         } else {
