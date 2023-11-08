@@ -1,7 +1,7 @@
+const bcrypt = require('bcrypt');
 const Cerca = require('../triacontagono/Cerca');
 
 class CercaDao {
-    
     constructor() {
         this.cercas = [];
     }
@@ -38,6 +38,15 @@ class CercaDao {
         if (cerca.lado <= 0 || isNaN(cerca.lado)) {
             throw new Error('Lado da cerca inválido.');
         }
+    }
+
+    autenticar(nome, senha) {
+        for (let cerca of this.listar()) {
+            if (cerca.nome === nome && bcrypt.compareSync(senha, cerca.senha)) {
+                return cerca;
+            }
+        }
+        return null;
     }
 }
 
