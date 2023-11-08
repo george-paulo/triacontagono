@@ -5,7 +5,7 @@ const utils = require('../lib/utils');
 
 class CercaController {
     constructor() {
-        this.cercas = []; // Inicialize a propriedade cercas como um array vazio.
+        this.cercas = []; 
         this.cercaDao = new CercaDao();
         this.getCercaFromRequest = this.getCercaFromRequest.bind(this);
     }
