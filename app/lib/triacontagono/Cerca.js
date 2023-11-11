@@ -1,5 +1,3 @@
-const math = require('mathjs');
-
 class Cerca {
     constructor(nome, lado) {
         this.nome = nome;

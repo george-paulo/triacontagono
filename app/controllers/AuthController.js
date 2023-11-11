@@ -39,13 +39,14 @@ class AuthController {
     }
 
     autorizar(papeisPermitidos) {
-        return (req, res, proximoControlador) => {
+        return async (req, res, proximoControlador) => {
             try {
                 const token = req.headers.authorization.split(' ')[1];
                 const usuario = jwt.verify(token, this.SEGREDO_JWT);
 
+                req.usuario = usuario;
+
                 if (papeisPermitidos.includes(usuario.papel) || papeisPermitidos.length === 0) {
-                    req.usuario = usuario;
                     proximoControlador();
                 } else {
                     utils.renderizarJSON(res, {

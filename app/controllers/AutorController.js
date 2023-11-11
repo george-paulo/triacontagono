@@ -15,7 +15,8 @@ class AutorController {
                 'Ano: Desde 2018'
             ]
         };
-        res.render('autor', autor);
+
+        utils.renderizarEjs(res, './views/autor.ejs', autor);
     }
 }
 

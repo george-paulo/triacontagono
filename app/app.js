@@ -1,12 +1,13 @@
-require('dotenv').config();
-
+const http = require('http');
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
 const CercaController = require('./controllers/CercaController');
 const AutorController = require('./controllers/AutorController');
 const EstaticoController = require('./controllers/EstaticoController');
-const AuthController = require('./controllers/AuthController'); // Importe o AuthController
+const AuthController = require('./controllers/AuthController');
+
+const app = express();
+const PORT = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
@@ -15,48 +16,37 @@ app.set('views', __dirname + '/views');
 const cercaController = new CercaController();
 const autorController = new AutorController();
 const estaticoController = new EstaticoController();
-const authController = new AuthController(); // Instancie o AuthController
+const authController = new AuthController();
 
-app.get('/', (req, res) => {
-    estaticoController.naoEncontrado(req, res);
+const server = http.createServer((req, res) => {
+    let [url, queryString] = req.url.split('?');
+    let urlList = url.split('/');
+    url = urlList[1];
+    let metodo = req.method;
+
+    if (url == 'index') {
+        cercaController.index(req, res);
+    } else if (url == 'media') {
+        cercaController.calcularArea(req, res);
+    } else if (url == 'triacontagono' && metodo == 'POST') {
+        cercaController.inserir(req, res);
+    } else if (url == 'triacontagono' && metodo == 'GET') {
+        cercaController.index(req, res);
+    } else if (url == 'triacontagono' && metodo == 'PUT') {
+        cercaController.alterar(req, res);
+    } else if (url == 'triacontagono' && metodo == 'DELETE') {
+        cercaController.apagar(req, res);
+    } else if (url == 'autor') {
+        autorController.index(req, res);
+    } else if (url == 'login' && metodo == 'GET') {
+        authController.index(req, res);
+    } else if (url == 'logar' && metodo == 'POST') {
+        authController.logar(req, res);
+    } else {
+        estaticoController.naoEncontrado(req, res);
+    }
 });
 
-app.post('/triacontagono', (req, res) => {
-    cercaController.inserir(req, res);
-});
-
-app.get('/index', (req, res) => {
-    res.render('index');
-});
-
-app.get('/triacontagono', (req, res) => {
-    cercaController.index(req, res);
-});
-
-app.post('/triacontagono', (req, res) => {
-    cercaController.calcularArea(req, res);
-});
-
-app.put('/triacontagono/:id', (req, res) => {
-    cercaController.alterar(req, res);
-});
-
-app.delete('/triacontagono/:id', (req, res) => {
-    cercaController.apagar(req, res);
-});
-
-app.get('/autor', (req, res) => {
-    autorController.index(req, res);
-});
-
-app.get('/login', authController.index);
-
-app.post('/logar', authController.logar);
-
-app.use((req, res) => {
-    estaticoController.naoEncontrado(req, res);
-});
-
-app.listen(3000, () => {
-    console.log('Server listening on port 3000');
+server.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });

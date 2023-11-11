@@ -1,13 +1,11 @@
 const bcrypt = require('bcrypt');
-const Cerca = require('../lib/triacontagono/Cerca');
-const CercaDao = require('../lib/triacontagono/CercaDao');
+const jwt = require('jsonwebtoken');
 const utils = require('../lib/utils');
+const CercaDao = require('../lib/triacontagono/CercaDao');
 
 class CercaController {
-    constructor() {
-        this.cercas = []; 
-        this.cercaDao = new CercaDao();
-        this.getCercaFromRequest = this.getCercaFromRequest.bind(this);
+    constructor(cercaDao) {
+        this.cercaDao = cercaDao;
     }
 
     index(req, res) {
@@ -16,7 +14,7 @@ class CercaController {
 
     async inserir(req, res) {
         try {
-            let cerca = await this.getCercaFromRequest(req);
+            const cerca = await this.getCercaFromRequest(req);
             this.cercaDao.inserir(cerca);
 
             const area = cerca.calcularArea();
@@ -30,18 +28,29 @@ class CercaController {
     }
 
     alterar(id, cerca) {
-        if (id >= 0 && id < this.cercas.length) {
-            this.cercas[id] = cerca;
-        } else {
-            throw new Error('Cerca não encontrada para alteração.');
+        try {
+            this.cercaDao.alterar(id, cerca);
+            utils.renderizarJSON(res, {
+                mensagem: 'Cerca alterada com sucesso.'
+            });
+        } catch (e) {
+            utils.renderizarJSON(res, {
+                mensagem: e.message
+            }, 400);
         }
     }
 
     apagar(id) {
-        if (id >= 0 && id < this.cercas.length) {
-            this.cercas.splice(id, 1);
-        } else {
-            throw new Error('Cerca não encontrada para exclusão.');
+        try {
+            this.cercaDao.apagar(id);
+            utils.renderizarJSON(res, {
+                mensagem: 'Cerca apagada com sucesso.',
+                id: id
+            });
+        } catch (e) {
+            utils.renderizarJSON(res, {
+                mensagem: e.message
+            }, 400);
         }
     }
 
@@ -55,17 +64,24 @@ class CercaController {
     }
 
     autenticar(nome, senha) {
-        for (let cerca of this.listar()) {
+        const cercas = this.cercaDao.listar();
+    
+        for (const cerca of cercas) {
             if (cerca.nome === nome && bcrypt.compareSync(senha, cerca.senha)) {
-                return cerca;
+                return {
+                    nome: cerca.nome,
+                    papel: cerca.papel
+                };
             }
         }
+        
         return null;
     }
+    
 
     async getCercaFromRequest(req) {
-        let corpo = await utils.getCorpo(req);
-        let cerca = new Cerca(corpo.nome, parseFloat(corpo.lado));
+        const corpo = await utils.getCorpo(req);
+        const cerca = new Cerca(corpo.nome, parseFloat(corpo.lado));
         return cerca;
     }
 }
