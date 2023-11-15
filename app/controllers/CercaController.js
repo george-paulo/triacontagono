@@ -17,17 +17,17 @@ class CercaController {
         try {
             const cerca = await this.getCercaFromRequest(req);
             this.cercaDao.inserir(cerca);
-
+    
             const area = cerca.calcularArea();
             const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
             const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena';
-
-            utils.renderizarJSON(res, { nome: cerca.nome, lado: cerca.lado, area, mensagem, motivo, mensagem: 'Cerca cadastrada com sucesso.' });
+    
+            utils.renderizarJSON(res, { nome: cerca.nome, lado: cerca.lado, area, mensagem, motivo });
         } catch (e) {
             utils.renderizarJSON(res, { mensagem: e.message }, 400);
         }
     }
-
+  
     alterar(id, cerca) {
         try {
             this.cercaDao.alterar(id, cerca);

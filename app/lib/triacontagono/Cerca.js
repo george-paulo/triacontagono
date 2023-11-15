@@ -2,6 +2,8 @@ class Cerca {
     constructor(nome, lado) {
         this.nome = nome;
         this.lado = lado;
+        this.area = this.calcularArea();
+        this.tamanho = this.area > 200 ? 'grande' : 'pequena';
     }
 
     calcularArea() {
