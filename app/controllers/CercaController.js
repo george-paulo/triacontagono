@@ -1,7 +1,5 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const utils = require('../lib/utils');
-const CercaDao = require('../lib/triacontagono/CercaDao');
 const Cerca = require('../lib/triacontagono/Cerca');
 
 class CercaController {

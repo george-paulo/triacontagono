@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const Cerca = require('../triacontagono/Cerca');
 
 class CercaDao {
     constructor() {

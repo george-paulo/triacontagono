@@ -25,7 +25,7 @@ const estaticoController = new EstaticoController();
 const authController = new AuthController();
 
 const server = http.createServer((req, res) => {
-    let [url, queryString] = req.url.split('?');
+    let [url] = req.url.split('?');
     let urlList = url.split('/');
     url = urlList[1];
     let metodo = req.method;

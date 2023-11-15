@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const utils = require('../lib/utils');
-const UsuarioDao = require('../lib/triacontagono/UsuarioDao');
 const Usuario = require('../lib/triacontagono/Usuario');
 
 class UsuarioController {
