@@ -3,22 +3,26 @@ const ejs = require('ejs');
 
 const utils = {
     decodeUrl: function (url) {
-        const properties = url.split('&');
-        const query = {};
-        for (const property of properties) {
-            const [variable, value] = property.split('=');
+        let properties = url.split('&');
+        let query = {};
+        for (let property of properties) {
+            let [variable, value] = property.split('=');
             query[variable] = value;
         }
         return query;
     },
 
     renderEjs: function (res, file, data) {
-        const text = fs.readFileSync(file, 'utf-8');
-        const html = ejs.render(text, data);
-
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(html);
-        res.end();
+        fs.readFile(file, 'utf-8', (err, content) => {
+            if (err) {
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Erro interno.');
+                return;
+            }
+            const rendered = ejs.render(content, data);
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(rendered);
+        });
     },
 
     renderJSON: function (res, data, status = 200) {
@@ -27,21 +31,30 @@ const utils = {
         res.end();
     },
 
-    getRequestBody: function (req) {
+    getCorpo: function(req) {
         return new Promise((resolve, reject) => {
-            let bodyText = '';
+            let corpoTexto = '';
             let i = 0;
-            req.on('data', function (chunk) {
-                bodyText += chunk;
-                console.log(i++, bodyText);
+            req.on('data', function(pedaco) {
+                corpoTexto += pedaco;
+                console.log(i++, corpoTexto);
             });
             req.on('end', () => {
-                const body = utils.decodeUrl(bodyText);
-
-                resolve(body);
+                let corpo = utils.decodificarUrl(corpoTexto);
+                resolve(corpo);
             });
         });
     },
+
+    decodificarUrl: function(url) {
+        let propriedades = url.split('&');
+        let query = {};
+        for (let propriedade of propriedades) {
+            let [variavel, valor] = propriedade.split('=');
+            query[variavel] = valor;
+        }
+        return query;
+    }
 };
 
 module.exports = utils;

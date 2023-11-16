@@ -1,7 +1,4 @@
-const Cerca = require('../triacontagono/Cerca');
-
 class CercaDao {
-    
     constructor() {
         this.cercas = [];
     }
@@ -30,7 +27,12 @@ class CercaDao {
             throw new Error('Cerca não encontrada para exclusão.');
         }
     }
-
+   
+    criar(cerca) {
+        this.validar(cerca);
+        this.inserir(cerca);
+    }
+   
     validar(cerca) {
         if (cerca.nome === '') {
             throw new Error('Nome em branco.');

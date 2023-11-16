@@ -1,66 +1,93 @@
+const utils = require('../lib/utils');
 const Cerca = require('../lib/triacontagono/Cerca');
-const CercaDao = require('../lib/triacontagono/CercaDao');
 
 class CercaController {
-    constructor() {
-        this.cercaDao = new CercaDao();
+    constructor(cercaDao) {
+        this.cercaDao = cercaDao;
     }
 
-    get(req, res) {
-        res.render('triacontagono', {
-            nome: '',
-            lado: '',
-            area: '',
-            mensagem: '',
-            motivo: ''
+    async index(req, res) {
+        utils.renderEjs(res, './views/index.ejs');
+    }
+
+    async calcular(req, res) {
+        let corpoTexto = '';
+        req.on('data', function (pedaco) {
+            corpoTexto += pedaco;
+        });
+        req.on('end', () => {
+            let query = utils.decodeUrl(corpoTexto);
+            let cerca = new Cerca(query.nome, parseFloat(query.lado));
+            utils.renderEjs(res, './views/media.ejs', cerca);
         });
     }
 
-    post(req, res) {
-        const { nome, lado } = req.body;
+    async listar(req, res) {
+        let cercas = this.cercaDao.listar();
 
-        if (isNaN(lado)) {
-            return res.render('triacontagono', {
-                nome,
-                lado: 'Valor inválido',
-                area: 'Valor inválido',
-                mensagem: 'O valor do lado não é um número válido.',
-                motivo: 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena.'
-            });
-        } else {
-            const area = Cerca.calcularArea(lado);
-            const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
-            const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena';
+        let dados = cercas.map(cerca => ({
+            ...cerca,
+            area: new Cerca(cerca.nome, cerca.lado).calcularArea()
+        }));
 
-            res.render('triacontagono', {
-                nome,
-                lado,
-                area,
-                mensagem,
-                motivo
+        utils.renderJSON(res, dados);
+    }
+
+    async criar(req, res) {
+        try {
+            let cerca = await this.getCercaRequisicao(req);
+            this.cercaDao.criar(cerca);
+
+            utils.renderJSON(res, {
+                cerca: {
+                    ...cerca,
+                    area: new Cerca(cerca.nome, cerca.lado).calcularArea()
+                },
+                mensagem: 'mensagem_cerca_criada'
             });
+        } catch (e) {
+            utils.renderJSON(res, {
+                mensagem: e.message
+            }, 400);
         }
     }
 
-    put(req, res) {
-        const { nome, lado } = req.body;
-        const id = req.params.id;
+    async atualizar(req, res) {
+        try {
+            let cerca = await this.getCercaRequisicao(req);
+            let id = req.params.id;
 
-        if (isNaN(lado)) {
-            return res.status(400).json({ mensagem: 'O valor do lado não é um número válido.' });
-        } else {
-            const area = Cerca.calcularArea(lado);
-            const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
-            const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena.';
-
-            res.status(200).json({
-                nome,
-                lado,
-                area,
-                mensagem,
-                motivo,
+            this.cercaDao.atualizar(id, cerca);
+            utils.renderJSON(res, {
+                mensagem: 'mensagem_cerca_atualizada'
             });
+        } catch (e) {
+            utils.renderJSON(res, {
+                mensagem: e.message
+            }, 400);
         }
+    }
+
+    async deletar(req, res) {
+        try {
+            let id = req.params.id;
+            this.cercaDao.deletar(id);
+
+            utils.renderJSON(res, {
+                mensagem: 'mensagem_cerca_deletada',
+                id: id
+            });
+        } catch (e) {
+            utils.renderJSON(res, {
+                mensagem: e.message
+            }, 400);
+        }
+    }
+
+    async getCercaRequisicao(req) {
+        let corpo = await utils.getCorpo(req);
+        let cerca = new Cerca(corpo.nome, parseFloat(corpo.lado));
+        return cerca;
     }
 }
 

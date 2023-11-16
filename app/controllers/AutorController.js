@@ -1,4 +1,4 @@
-const utils = require("../lib/utils");
+const utils = require('../lib/utils');
 
 class AutorController {
     index(req, res) {
@@ -15,7 +15,7 @@ class AutorController {
                 'Ano: Desde 2018'
             ]
         };
-        res.render('autor', autor);
+        utils.renderEjs(res, './views/autor.ejs', autor);
     }
 }
 
