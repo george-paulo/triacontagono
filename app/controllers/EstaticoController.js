@@ -1,5 +1,5 @@
 class EstaticoController {
-    naoEncontrado(res) {
+    naoEncontrado(req, res) {
         res.writeHead(404, { 'Content-Type': 'text/html' });
         res.write(`<!DOCTYPE html>
         <html lang="pt-BR">
