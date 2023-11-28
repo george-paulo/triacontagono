@@ -1,35 +1,49 @@
-class UsuarioDao {
+const Usuario = require("./Usuario")
+const bcrypt = require('bcrypt')
+
+class UsuariosDao {
     constructor() {
         this.usuarios = [];
     }
-
     listar() {
         return this.usuarios;
     }
 
     inserir(usuario) {
         this.validar(usuario);
+        usuario.senha = bcrypt.hashSync(usuario.senha, 10);
         this.usuarios.push(usuario);
     }
 
     alterar(id, usuario) {
-        if (id == null || id == undefined || this.usuarios[id] == undefined)
-            throw new Error('id_usuario_invalido');
         this.validar(usuario);
         this.usuarios[id] = usuario;
     }
 
     apagar(id) {
-        if (id == null || id == undefined || this.usuarios[id] == undefined)
-            throw new Error('id_usuario_invalido');
         this.usuarios.splice(id, 1);
     }
 
     validar(usuario) {
-        if (!usuario || typeof usuario !== 'object') {
-            throw new Error('usuario_invalido');
+        if (usuario.nome == '') {
+            throw new Error('mensagem_nome_em_branco');
+        }
+        if (!usuario.senha) {
+            throw new Error('mensagem_senha_em_branco');
+        }
+        if (!usuario.papel) {
+            throw new Error('mensagem_papel_em_branco');
         }
     }
+    autenticar(nome, senha) {
+        for (let usuario of this.listar()) {
+            if (usuario.nome == nome && bcrypt.compareSync(senha, usuario.senha)) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
 }
 
-module.exports = UsuarioDao;
+module.exports = UsuariosDao;

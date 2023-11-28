@@ -5,9 +5,11 @@ const CercaController = require('./controllers/CercaController');
 const AutorController = require('./controllers/AutorController');
 const EstaticoController = require('./controllers/EstaticoController');
 const AuthController = require('./controllers/AuthController');
-const CercaDao = require('./lib/triacontagono/CercaDao');
-const UsuarioDao = require('./lib/triacontagono/UsuarioDao'); 
-const UsuarioController = require('./controllers/UsuarioController'); 
+const CercaMysqlDao = require('./lib/triacontagono/CercaMysqlDao');
+const UsuariosMysqlDao = require('./lib/triacontagono/UsuariosMysqlDao');
+const UsuarioController = require('./controllers/UsuarioController'); // Verifique se o nome do arquivo está correto
+
+const mysql = require('mysql');
 
 const app = express();
 const PORT = 3000;
@@ -16,10 +18,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
-const cercaDao = new CercaDao();
-const usuarioDao = new UsuarioDao();
+const pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'bd',
+    user: process.env.MARIADB_USER,
+    password: process.env.MARIADB_PASSWORD,
+    database: process.env.MARIADB_DATABASE
+});
+
+const cercaDao = new CercaMysqlDao(pool);
+const usuarioDao = new UsuariosMysqlDao(pool);
 const cercaController = new CercaController(cercaDao);
-const usuarioController = new UsuarioController(usuarioDao); 
+const usuarioController = new UsuarioController(usuarioDao);
+
 const autorController = new AutorController();
 const estaticoController = new EstaticoController();
 const authController = new AuthController();
@@ -32,8 +43,6 @@ const server = http.createServer((req, res) => {
 
     if (url == 'index') {
         cercaController.index(req, res);
-    } else if (url == 'media') {
-        cercaController.calcularArea(req, res);
     } else if (url == 'triacontagono' && metodo == 'POST') {
         cercaController.inserir(req, res);
     } else if (url == 'triacontagono' && metodo == 'GET') {
