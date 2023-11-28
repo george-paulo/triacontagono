@@ -62,13 +62,13 @@ class UsuariosMysqlDao {
 
     validar(usuario) {
         if (usuario.nome == '') {
-            throw new Error('mensagem_nome_em_branco');
+            throw new Error('Nome em branco');
         }
         if (!usuario.senha) {
-            throw new Error('mensagem_senha_em_branco');
+            throw new Error('Senha em branco');
         }
         if (!usuario.papel) {
-            throw new Error('mensagem_papel_em_branco');
+            throw new Error('Papel em branco');
         }
     }
 

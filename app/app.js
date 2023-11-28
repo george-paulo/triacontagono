@@ -56,11 +56,15 @@ const server = http.createServer((req, res) => {
     } else if (url == 'usuarios' && metodo == 'POST') {
         usuarioController.inserir(req, res);
     } else if (url == 'usuarios' && metodo == 'PUT') {
-        usuarioController.alterar(req, res);
+        authController.autorizar(req, res, () => {
+            usuarioController.alterar(req, res);
+        }, ['admin', 'geral']);
     } else if (url == 'usuarios' && metodo == 'DELETE') {
-        usuarioController.apagar(req, res);
+        authController.autorizar(req, res, () => {
+            usuarioController.apagar(req, res);
+        }, ['admin']);
     } else if (url == 'usuarios' && metodo == 'GET') {
-        usuarioController.index(req, res);
+        usuarioController.listar(req, res);
     } else if (url == 'login' && metodo == 'GET') {
         authController.index(req, res);
     } else if (url == 'logar' && metodo == 'POST') {

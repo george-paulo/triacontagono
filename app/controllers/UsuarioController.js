@@ -2,34 +2,40 @@ const bcrypt = require('bcrypt');
 const utils = require('../lib/utils');
 const Usuario = require('../lib/triacontagono/Usuario');
 
-class UsuarioController {
-    constructor(usuarioDao) {
-        this.usuarioDao = usuarioDao;
+class UsuariosController {
+    constructor(usuariosDao) {
+        this.usuariosDao = usuariosDao;
     }
 
-    index(req, res) {
-        const usuarios = this.usuarioDao.listar();
-        utils.renderizarJSON(res, usuarios);
+    async listar(req, res) {
+        try {
+            const usuarios = await this.usuariosDao.listar();
+            const dados = usuarios.map(usuario => ({ ...usuario }));
+
+            utils.renderizarJSON(res, dados);
+        } catch (e) {
+            utils.renderizarJSON(res, { mensagem: e.message }, 400);
+        }
     }
 
     async inserir(req, res) {
         try {
             const usuario = await this.getUsuarioFromRequest(req);
-            this.usuarioDao.inserir(usuario);
-    
-            utils.renderizarJSON(res, { mensagem: 'Usuário cadastrado com sucesso.' });
+            usuario.id = await this.usuariosDao.inserir(usuario);
+
+            utils.renderizarJSON(res, { usuario, mensagem: 'Usuário cadastrado com sucesso.' });
         } catch (e) {
             utils.renderizarJSON(res, { mensagem: e.message }, 400);
         }
     }
-  
+
     async alterar(req, res) {
         try {
             const { id } = req.params;
             const usuario = await this.getUsuarioFromRequest(req);
-    
-            this.usuarioDao.alterar(id, usuario);
-    
+
+            this.usuariosDao.alterar(id, usuario);
+
             utils.renderizarJSON(res, { mensagem: 'Usuário alterado com sucesso.' });
         } catch (e) {
             utils.renderizarJSON(res, { mensagem: e.message }, 400);
@@ -39,44 +45,20 @@ class UsuarioController {
     async apagar(req, res) {
         try {
             const { id } = req.params;
-    
-            this.usuarioDao.apagar(id);
-    
+
+            this.usuariosDao.apagar(id);
+
             utils.renderizarJSON(res, { mensagem: 'Usuário apagado com sucesso.' });
         } catch (e) {
             utils.renderizarJSON(res, { mensagem: e.message }, 400);
         }
     }
 
-    validar(usuario) {
-        if (!usuario.nome || usuario.nome === '') {
-            throw new Error('Nome do usuário não pode estar em branco.');
-        }
-        if (!usuario.papel || usuario.papel === '') {
-            throw new Error('Papel do usuário não pode estar em branco.');
-        }
-    }
-
-    autenticar(nome, senha) {
-        const usuarios = this.usuarioDao.listar();
-    
-        for (const usuario of usuarios) {
-            if (usuario.nome === nome && bcrypt.compareSync(senha, usuario.senha)) {
-                return {
-                    nome: usuario.nome,
-                    papel: usuario.papel
-                };
-            }
-        }
-        
-        return null;
-    }
-
     async getUsuarioFromRequest(req) {
         const corpo = await utils.getCorpo(req);
-        const usuario = new Usuario(corpo.nome, corpo.papel);
+        const usuario = new Usuario(corpo.nome, corpo.senha, corpo.papel);
         return usuario;
     }
 }
 
-module.exports = UsuarioController;
+module.exports = UsuariosController;

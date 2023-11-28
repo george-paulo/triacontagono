@@ -11,26 +11,66 @@ class CercaController {
         utils.renderizarEjs(res, './views/index.ejs');
     }
 
+    area(req, res) {
+        let corpoTexto = '';
+        req.on('data', function (pedaco) {
+            corpoTexto += pedaco;
+        });
+        req.on('end', () => {
+            let propriedades = corpoTexto.split('&');
+            let query = {};
+            for (let propriedade of propriedades) {
+                let [variavel, valor] = propriedade.split('=');
+                query[variavel] = valor;
+            }
+            let cerca = new Cerca();
+            cerca.nome = query.nome;
+            cerca.lado = parseFloat(query.lado);
+
+            utils.renderizarEjs(res, './views/triacontagono.ejs', cerca);
+        });
+    }
+
+    async listar(req, res) {
+        let cercas = await this.cercaDao.listar();
+        let dados = cercas.map(cerca => {
+            return {
+                ...cerca,
+                area: cerca.calcularArea(), 
+            };
+        });
+
+        utils.renderizarJSON(res, dados);
+    }
+
     async inserir(req, res) {
+        let cerca = await this.getCercaFromRequest(req);
         try {
-            const cerca = await this.getCercaFromRequest(req);
             this.cercaDao.inserir(cerca);
-    
-            const area = cerca.calcularArea();
-            const mensagem = area > 200 ? 'É uma cerca grande.' : 'É uma cerca pequena';
-            const motivo = 'Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, é uma cerca grande. Se for menor que 200 metros quadrados, é uma cerca pequena';
-    
-            utils.renderizarJSON(res, { nome: cerca.nome, lado: cerca.lado, area, mensagem, motivo });
+            utils.renderizarJSON(res, {
+                cerca: {
+                    ...cerca,
+                    area: cerca.calcularArea(), 
+                },
+                mensagem: 'Cerca Cadastrada Com Sucesso'
+            });
         } catch (e) {
-            utils.renderizarJSON(res, { mensagem: e.message }, 400);
+            utils.renderizarJSON(res, {
+                mensagem: e.message
+            }, 400);
         }
     }
-  
-    alterar(id, cerca) {
+
+    async alterar(req, res) {
+        let cerca = await this.getCercaFromRequest(req);
+        let [url, queryString] = req.url.split('?');
+        let urlList = url.split('/');
+        url = urlList[1];
+        let id = urlList[2];
         try {
             this.cercaDao.alterar(id, cerca);
             utils.renderizarJSON(res, {
-                mensagem: 'Cerca alterada com sucesso.'
+                mensagem: 'Cerca alterada Com Sucesso'
             });
         } catch (e) {
             utils.renderizarJSON(res, {
@@ -39,48 +79,25 @@ class CercaController {
         }
     }
 
-    apagar(id) {
-        try {
-            this.cercaDao.apagar(id);
-            utils.renderizarJSON(res, {
-                mensagem: 'Cerca apagada com sucesso.',
-                id: id
-            });
-        } catch (e) {
-            utils.renderizarJSON(res, {
-                mensagem: e.message
-            }, 400);
-        }
+    apagar(req, res) {
+        let [url, queryString] = req.url.split('?');
+        let urlList = url.split('/');
+        url = urlList[1];
+        let id = urlList[2];
+        this.cercaDao.apagar(id);
+        utils.renderizarJSON(res, {
+            mensagem: 'Cerca Apagada Com Sucesso',
+            id: id
+        });
     }
-
-    validar(cerca) {
-        if (cerca.nome === '') {
-            throw new Error('Nome em branco.');
-        }
-        if (cerca.lado <= 0 || isNaN(cerca.lado)) {
-            throw new Error('Lado da cerca inválido.');
-        }
-    }
-
-    autenticar(nome, senha) {
-        const cercas = this.cercaDao.listar();
-    
-        for (const cerca of cercas) {
-            if (cerca.nome === nome && bcrypt.compareSync(senha, cerca.senha)) {
-                return {
-                    nome: cerca.nome,
-                    papel: cerca.papel
-                };
-            }
-        }
-        
-        return null;
-    }
-    
 
     async getCercaFromRequest(req) {
-        const corpo = await utils.getCorpo(req);
-        const cerca = new Cerca(corpo.nome, parseFloat(corpo.lado));
+        let corpo = await utils.getCorpo(req);
+        let cerca = new Cerca(
+            corpo.nome,
+            parseFloat(corpo.lado),
+            corpo.papel
+        );
         return cerca;
     }
 }
