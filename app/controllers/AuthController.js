@@ -37,7 +37,7 @@ class AuthController {
     }
 
     autorizar(papeisPermitidos) {
-        return async (req, res, proximoControlador) => {
+        return async (req, res, proximoControlador, papeisPermitidos)) => {
             try {
                 const token = req.headers.authorization.split(' ')[1];
                 const usuario = jwt.verify(token, this.SEGREDO_JWT);
