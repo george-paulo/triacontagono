@@ -32,8 +32,6 @@ const server = http.createServer((req, res) => {
 
     if (url == 'index') {
         cercaController.index(req, res);
-    } else if (url == 'media') {
-        cercaController.calcularArea(req, res);
     } else if (url == 'triacontagono' && metodo == 'POST') {
         cercaController.inserir(req, res);
     } else if (url == 'triacontagono' && metodo == 'GET') {
