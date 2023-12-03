@@ -16,7 +16,7 @@
     <%- include('/home/node/app/views/cabecalho.ejs') %>
     <img src="/app/Publico/img/logo.png" alt="Logo IFCE">
     <h1>Página inicial</h1>
-    <form id="formCerca" action="/triacontagono" method="post">
+    <form id="formCerca" action="/triacontagono" method="post" onsubmit="return calcularCerca();">
         <label>
             <span>Nome da Cerca</span>
             <input name="nome">
