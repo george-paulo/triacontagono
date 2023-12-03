@@ -1,23 +1,33 @@
-function calcularArea() {
+function calcularCerca() {
+    console.log('Função calcularCerca foi chamada.');
+
     let inputNome = document.querySelector('[name=nome]');
     let nome = inputNome.value;
     let inputLado = document.querySelector('[name=lado]');
     let lado = parseFloat(inputLado.value);
     const pi = Math.PI;
     let area = (30 * lado * lado) / (4 * (1 / Math.tan(pi / 30)));
-    let grande_pequena = (area >= 10 && area <= 20);
-
     let divResposta = document.querySelector('#resposta');
     let div = document.createElement('div');
     div.textContent = 'Olá, ' + nome + '! Sua cerca tem ' + lado + ' metros de lado. A área dela é ' + area + ' metros quadrados.';
 
-    if (grande_pequena) {
-        div.classList.add('padrao');
-        div.classList.remove('npadrao');
+    divResposta.innerHTML = '';
+
+    if (area > 200) {
+        div.textContent += ' É uma área grande!';
+        div.classList.add('grande');
     } else {
-        div.classList.remove('padrao');
-        div.classList.add('npadrao');
+        div.textContent += ' É uma área pequena!';
+        div.classList.add('pequena');
     }
 
     divResposta.append(div);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('botaoCalcular').addEventListener('click', function(event) {
+        event.preventDefault();
+        calcularCerca();
+        document.getElementById('formCerca').submit();
+    });
+});

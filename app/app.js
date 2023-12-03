@@ -36,6 +36,7 @@ const estaticoController = new EstaticoController();
 const authController = new AuthController();
 
 const server = http.createServer((req, res) => {
+    console.log(`Recebida requisição para: ${req.url} - Método: ${req.method}`);
     let [url] = req.url.split('?');
     let urlList = url.split('/');
     url = urlList[1];

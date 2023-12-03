@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <script src="../Publico/js/areaCerca.js"></script>
+    <script src="/app/Publico/js/areaCerca.js"></script>
     <style>
         .grande {
             color: red;
@@ -14,9 +14,9 @@
 </head>
 <body>
     <%- include('/home/node/app/views/cabecalho.ejs') %>
-    <img src="../Publico/img/logo.png">
+    <img src="/app/Publico/img/logo.png">
     <h1>Página inicial</h1>
-    <form action="/triacontagono" method="post" onSubmit="event.preventDefault(); calcularCerca();">
+    <form id="formCerca" action="/triacontagono" method="post">
         <label>
             <span>Nome da Cerca</span>
             <input name="nome">
@@ -25,10 +25,10 @@
             <span>Lado do triacontágono (em metros)</span>
             <input name="lado">
         </label>
-        <button>Calcular</button>
+        <button id="botaoCalcular">Calcular</button>
     </form>
     <div id="resposta"></div>
 
-    <script src="../Publico/js/areaCerca.js"></script>
+    <script src="/app/Publico/js/areaCerca.js"></script>
 </body>
 </html>
