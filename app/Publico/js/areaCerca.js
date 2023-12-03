@@ -1,6 +1,4 @@
 function calcularCerca() {
-    console.log('Função calcularCerca foi chamada.');
-
     let inputNome = document.querySelector('[name=nome]');
     let nome = inputNome.value;
     let inputLado = document.querySelector('[name=lado]');
@@ -22,12 +20,6 @@ function calcularCerca() {
     }
 
     divResposta.append(div);
-}
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('botaoCalcular').addEventListener('click', function(event) {
-        event.preventDefault();
-        calcularCerca();
-        document.getElementById('formCerca').submit();
-    });
-});
+    return false;
+}
