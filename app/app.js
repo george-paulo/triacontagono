@@ -7,7 +7,7 @@ const EstaticoController = require('./controllers/EstaticoController');
 const AuthController = require('./controllers/AuthController');
 const CercaMysqlDao = require('./lib/triacontagono/CercaMysqlDao');
 const UsuariosMysqlDao = require('./lib/triacontagono/UsuariosMysqlDao');
-const UsuarioController = require('./controllers/UsuarioController'); // Verifique se o nome do arquivo está correto
+const UsuarioController = require('./controllers/UsuarioController');
 
 const mysql = require('mysql');
 
@@ -36,7 +36,7 @@ const estaticoController = new EstaticoController();
 const authController = new AuthController();
 
 const server = http.createServer((req, res) => {
-    console.log(`Recebida requisição para: ${req.url} - Método: ${req.method}`);
+    /*console.log(`Recebida requisição para: ${req.url} - Método: ${req.method}`);*/
     let [url] = req.url.split('?');
     let urlList = url.split('/');
     url = urlList[1];
