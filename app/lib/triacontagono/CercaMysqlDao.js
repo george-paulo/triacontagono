@@ -62,11 +62,11 @@ class CercaMysqlDao {
     }
 
     validar(cerca) {
-        if (cerca.nome == '') {
-            throw new Error('mensagem_nome_em_branco');
+        if (cerca.nome === '') {
+            throw new Error('Nome em branco.');
         }
-        if (cerca.lado < 0) {
-            throw new Error('mensagem_tamanho_invalido');
+        if (cerca.lado <= 0 || isNaN(cerca.lado)) {
+            throw new Error('Lado da cerca inválido.');
         }
     }
 }
