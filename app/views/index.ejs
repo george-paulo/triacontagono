@@ -1,34 +1,67 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
-    <script src="/app/Publico/js/areaCerca.js"></script>
-    <style>
-        .grande {
-            color: red;
-        }
-        .pequena {
-            color: green;
-        }
-    </style>
-</head>
-<body>
-    <%- include('/home/node/app/views/cabecalho.ejs') %>
-    <img src="/app/Publico/img/logo.png" alt="Logo IFCE">
-    <h1>Página inicial</h1>
-    <form id="formCerca" action="/triacontagono" method="post">
-        <label>
-            <span>Nome da Cerca</span>
-            <input name="nome">
-        </label>
-        <label>
-            <span>Lado do triacontágono (em metros)</span>
-            <input name="lado">
-        </label>
-        <button id="botaoCalcular">Calcular</button>
-    </form>
-    <div id="resposta"></div>
 
     <script src="/app/Publico/js/areaCerca.js"></script>
+
+    <style>
+
+        .grande {
+
+            color: red;
+
+        }
+
+        .pequena {
+
+            color: green;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <%- include('/home/node/app/views/cabecalho.ejs') %>
+
+    <img src="/app/Publico/img/logo.png" alt="Logo IFCE">
+
+    <h1>Página inicial</h1>
+
+    <form id="formCerca" action="/triacontagono" method="post" onsubmit="return calcularCerca();">
+
+        <label>
+
+            <span>Nome da Cerca</span>
+
+            <input name="nome">
+
+        </label>
+
+        <label>
+
+            <span>Lado do triacontágono (em metros)</span>
+
+            <input name="lado">
+
+        </label>
+
+        <button id="botaoCalcular">Calcular</button>
+
+    </form>
+
+    <div id="resposta"></div>
+
+
+
+    <script src="/app/Publico/js/areaCerca.js"></script>
+
 </body>
+
 </html>
