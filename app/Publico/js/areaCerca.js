@@ -1,33 +1,23 @@
-function calcularCerca() {
-    const nome = document.querySelector('input[name="nome"]').value;
-    const lado = parseFloat(document.querySelector('input[name="lado"]').value);
-    const resposta = document.getElementById('resposta');
-
-    const area = calcularAreaCerca(lado);
-    let tamanho;
-    if (area > 200) {
-        tamanho = 'Grande';
-    } else {
-        tamanho = 'Pequena';
-    }
-    resposta.innerHTML = `Olá, ${nome}. Sua cerca tem ${lado} metros de lado. A área dela é ${area.toFixed(2)} metros quadrados.`;
-    resposta.classList.add(tamanho.toLowerCase()); 
-
-    return tamanho; 
-}
-
-function calcularAreaCerca(lado) {
+function calcularArea() {
+    let inputNome = document.querySelector('[name=nome]');
+    let nome = inputNome.value;
+    let inputLado = document.querySelector('[name=lado]');
+    let lado = parseFloat(inputLado.value);
     const pi = Math.PI;
-    const area = (30 * lado * lado) / (4 * (1 / Math.tan(pi / 30)));
-    return area.toFixed(2);
-}
+    let area = (30 * lado * lado) / (4 * (1 / Math.tan(pi / 30)));
+    let grande_pequena = (area >= 10 && area <= 20);
 
-function grande_pequena() {
-    const lado = parseFloat(document.querySelector('input[name="lado"]').value);
-    const area = calcularAreaCerca(lado);
-    return area > 200; 
-}
+    let divResposta = document.querySelector('#resposta');
+    let div = document.createElement('div');
+    div.textContent = 'Olá, ' + nome + '! Sua cerca tem ' + lado + ' metros de lado. A área dela é ' + area + ' metros quadrados.';
 
-function cerca() {
-    return grande_pequena() ? 'Grande' : 'Pequena';
+    if (grande_pequena) {
+        div.classList.add('padrao');
+        div.classList.remove('npadrao');
+    } else {
+        div.classList.remove('padrao');
+        div.classList.add('npadrao');
+    }
+
+    divResposta.append(div);
 }
