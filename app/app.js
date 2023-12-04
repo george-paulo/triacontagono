@@ -11,7 +11,6 @@ const UsuarioController = require('./controllers/UsuarioController');
 
 const mysql = require('mysql');
 
-
 const app = express();
 const PORT = 3000;
 
