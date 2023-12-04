@@ -26,7 +26,7 @@ class CercaMysqlDao {
 
         return new Promise((resolve, reject) => {
             let sql = 'INSERT INTO cercas (nome, lado) VALUES (?, ?);';
-            console.log({sql}, cerca);
+            console.log({ sql }, cerca);
             this.pool.query(sql, [cerca.nome, cerca.lado], function (error, resultado, fields) {
                 if (error) {
                     return reject('Erro: ' + error.message);
@@ -63,10 +63,10 @@ class CercaMysqlDao {
 
     validar(cerca) {
         if (cerca.nome == '') {
-            throw new Error('mensagem_nome_em_branco');
+            throw new Error('Mensagem nome em branco');
         }
         if (cerca.lado < 0) {
-            throw new Error('mensagem_tamanho_invalido');
+            throw new Error('Tamanho invalido');
         }
     }
 }
