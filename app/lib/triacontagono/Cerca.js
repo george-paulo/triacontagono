@@ -1,16 +1,29 @@
 class Cerca {
+
     constructor(nome, lado) {
+
         this.nome = nome;
+
         this.lado = lado;
-        this.area = this.calcularArea();
-        this.tamanho = this.area > 200 ? 'grande' : 'pequena';
+
+        this.id = null; // Como não é usado na classe Cerca, defina como null
+
     }
 
-    calcularArea() {
+    
+
+    area() {
+
         const pi = Math.PI;
+
         const area = (30 * this.lado * this.lado) / (4 * (1 / Math.tan(pi / 30)));
-        return area;
+
+        return area.toFixed(2);
+
     }
+
 }
+
+
 
 module.exports = Cerca;
