@@ -32,15 +32,25 @@ class CercaController {
     }
 
     async listar(req, res) {
-        let cercas = await this.cercaDao.listar();
-        let dados = cercas.map(cerca => {
-            return {
-                ...cerca,
-                area: cerca.calcularArea(), 
-            };
-        });
+        try {
+            let cercas = await this.cercaDao.listar();
 
-        utils.renderizarJSON(res, dados);
+            let dados = cercas.map(cerca => {
+                return {
+                    id: cerca.id, 
+                    nome: cerca.nome,
+                    lado: cerca.lado,
+                    area: cerca.calcularArea ? cerca.calcularArea() : null
+                };
+            });
+
+            console.log('Dados a serem enviados como JSON:', dados);
+
+            utils.renderizarJSON(res, dados);
+        } catch (error) {
+            console.error('Erro ao listar cercas:', error);
+            utils.renderizarJSON(res, { mensagem: error.message }, 500);
+        }
     }
 
     async inserir(req, res) {

@@ -6,7 +6,7 @@ class Cerca {
 
         this.lado = lado;
 
-        this.id = null; // Como não é usado na classe Cerca, defina como null
+        this.id = null;
 
     }
 

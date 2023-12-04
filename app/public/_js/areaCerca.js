@@ -58,10 +58,10 @@ async function inserir(cerca) {
 }
 
 async function listar() {
-    console.log('Área Listada');
     let divCercas = document.querySelector('#triacontagono');
     divCercas.innerText = 'Carregando...';
     let resposta = await fetch('/triacontagono');
+    console.log(resposta);
     let cercas = await resposta.json();
     divCercas.innerHTML = '';
     for (let cerca of cercas) {

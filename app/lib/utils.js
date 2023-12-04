@@ -23,8 +23,9 @@ const utils = {
     },
 
     renderizarJSON: function (res, dados, status = 200) {
+        console.log('Dados a serem enviados como JSON:', dados);
         res.writeHead(status, { 'Content-Type': 'application/json' });
-        res.write(JSON.stringify(dados));
+        res.end(JSON.stringify(dados));
         res.end();
     },
 
