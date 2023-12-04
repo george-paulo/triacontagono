@@ -1,25 +1,115 @@
-function calcularCerca() {
+function calcularArea() {
     let inputNome = document.querySelector('[name=nome]');
     let nome = inputNome.value;
     let inputLado = document.querySelector('[name=lado]');
     let lado = parseFloat(inputLado.value);
-    const pi = Math.PI;
-    let area = (30 * lado * lado) / (4 * (1 / Math.tan(pi / 30)));
-    let divResposta = document.querySelector('#resposta');
-    let div = document.createElement('div');
-    div.textContent = 'Olá, ' + nome + '! Sua cerca tem ' + lado + ' metros de lado. A área dela é ' + area + ' metros quadrados.';
 
-    divResposta.innerHTML = '';
+    inserir({
+        nome, lado
+    });
+    listar();
+}
 
-    if (area > 200) {
-        div.textContent += ' É uma área grande!';
-        div.classList.add('grande');
-    } else {
-        div.textContent += ' É uma área pequena!';
-        div.classList.add('pequena');
+let traducoes = {
+    'pt-BR': {
+        'senha_em_branco': 'A senha não pode ser em branco!',
+        'cerca_cadastrada': 'Cerca cadastrada com sucesso!',
+        'cerca_apagado': 'Cerca apagada com sucesso!'
+    },
+    'en': {
+        'mensagem_senha_em_branco': 'Password cannot be empty!'
     }
+};
 
-    divResposta.append(div);
+async function inserir(cerca) {
+    try {
+        let divResposta = document.querySelector('#resposta');
+        let dados = new URLSearchParams(cerca);
+        let resposta = await fetch('/triacontagono', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: dados
+        });
 
-    return false;
+        if (!resposta.ok) {
+            throw new Error('Erro ao criar cerca');
+        }
+
+        atualizarEstilo('cerca_cadastrada');
+        let respostaJson = await resposta.json();
+        let mensagem = respostaJson.mensagem;
+        divResposta.innerText = traducoes['pt-BR'][mensagem];
+    } catch (error) {
+        console.error('Erro ao inserir cerca:', error.message);
+        atualizarEstilo('');
+        divResposta.innerText = 'Erro ao criar cerca. Tente novamente mais tarde.';
+    }
+}
+
+async function listar() {
+    let divCercas = document.querySelector('#triacontagono');
+    divCercas.innerText = 'Carregando...';
+    let resposta = await fetch('/triacontagono');
+    let cercas = await resposta.json();
+    divCercas.innerHTML = '';
+    for (let cerca of cercas) {
+        let linha = document.createElement('tr');
+        let colunaId = document.createElement('td');
+        let colunaNome = document.createElement('td');
+        let colunalado = document.createElement('td');
+        let colunaAcoes = document.createElement('td');
+        let botaoEditar = document.createElement('button');
+        let botaoApagar = document.createElement('button');
+        colunaId.innerText = cerca.id;
+        colunaNome.innerText = cerca.nome;
+        colunalado.innerText = cerca.lado;
+        botaoEditar.innerText = 'Editar';
+        botaoEditar.onclick = function () {
+            editar(cerca.id);
+        };
+        botaoApagar.onclick = function () {
+            apagar(cerca.id);
+        };
+        botaoApagar.innerText = 'Apagar';
+        linha.appendChild(colunaId);
+        linha.appendChild(colunaNome);
+        linha.appendChild(colunalado);
+        colunaAcoes.appendChild(botaoEditar);
+        colunaAcoes.appendChild(botaoApagar);
+        linha.appendChild(colunaAcoes);
+        divCercas.appendChild(linha);
+    }
+}
+
+async function editar(id) {
+    alert('editar' + id);
+}
+
+async function apagar(id) {
+    let divResposta = document.querySelector('#resposta');
+    if (confirm('Quer apagar o #' + id + '?')) {
+        let resposta = await fetch('/triacontagono/' + id, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            }
+        });
+        let respostaJson = await resposta.json();
+        let mensagem = respostaJson.mensagem;
+        divResposta.innerText = traducoes['pt-BR'][mensagem];
+        listar();
+    }
+}
+
+function atualizarEstilo(mensagem) {
+    let divResposta = document.querySelector('#resposta');
+    if (mensagem === 'Cerca cadastrada' || mensagem === 'Cerca apagada') {
+        divResposta.classList.add('grande');
+        divResposta.classList.remove('pequena');
+    } else {
+        divResposta.classList.add('pequena');
+        divResposta.classList.remove('grande');
+    }
 }
