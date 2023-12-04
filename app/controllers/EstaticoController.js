@@ -10,7 +10,7 @@ class EstaticoController {
 
         try {
 
-            const caminho = path.normalize('../app/Publico' + req.url).replace(/^(\.\.[\/\\])+/, '');
+            const caminho = path.normalize('./public' + req.url).replace(/^(\.\.[\/\\])+/, '');
 
             const dados = fs.readFileSync(caminho);
 
