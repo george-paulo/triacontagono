@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const Cerca = require('./Cerca');
 
 class CercaDao {
     constructor() {
