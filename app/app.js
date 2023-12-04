@@ -1,4 +1,3 @@
-const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const CercaController = require('./controllers/CercaController');
@@ -8,15 +7,12 @@ const AuthController = require('./controllers/AuthController');
 const CercaMysqlDao = require('./lib/triacontagono/CercaMysqlDao');
 const UsuariosMysqlDao = require('./lib/triacontagono/UsuariosMysqlDao');
 const UsuarioController = require('./controllers/UsuarioController');
-
 const mysql = require('mysql');
 
 const app = express();
 const PORT = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
 
 const pool = mysql.createPool({
     connectionLimit: 10,
@@ -35,46 +31,45 @@ const autorController = new AutorController();
 const estaticoController = new EstaticoController();
 const authController = new AuthController();
 
-const server = http.createServer((req, res) => {
-    /*console.log(`Recebida requisição para: ${req.url} - Método: ${req.method}`);*/
+app.use((req, res) => {
     let [url] = req.url.split('?');
     let urlList = url.split('/');
     url = urlList[1];
     let metodo = req.method;
 
-    if (url == 'index') {
+    if (url === 'index') {
         cercaController.index(req, res);
-    } else if (url == 'triacontagono' && metodo == 'POST') {
+    } else if (url === 'triacontagono' && metodo === 'POST') {
         cercaController.inserir(req, res);
-    } else if (url == 'triacontagono' && metodo == 'GET') {
+    } else if (url === 'triacontagono' && metodo === 'GET') {
         cercaController.index(req, res);
-    } else if (url == 'triacontagono' && metodo == 'PUT') {
+    } else if (url === 'triacontagono' && metodo === 'PUT') {
         cercaController.alterar(req, res);
-    } else if (url == 'triacontagono' && metodo == 'DELETE') {
+    } else if (url === 'triacontagono' && metodo === 'DELETE') {
         cercaController.apagar(req, res);
-    } else if (url == 'autor') {
+    } else if (url === 'autor') {
         autorController.index(req, res);
-    } else if (url == 'usuarios' && metodo == 'POST') {
+    } else if (url === 'usuarios' && metodo === 'POST') {
         usuarioController.inserir(req, res);
-    } else if (url == 'usuarios' && metodo == 'PUT') {
+    } else if (url === 'usuarios' && metodo === 'PUT') {
         authController.autorizar(req, res, () => {
             usuarioController.alterar(req, res);
         }, ['admin', 'geral']);
-    } else if (url == 'usuarios' && metodo == 'DELETE') {
+    } else if (url === 'usuarios' && metodo === 'DELETE') {
         authController.autorizar(req, res, () => {
             usuarioController.apagar(req, res);
         }, ['admin']);
-    } else if (url == 'usuarios' && metodo == 'GET') {
+    } else if (url === 'usuarios' && metodo === 'GET') {
         usuarioController.listar(req, res);
-    } else if (url == 'login' && metodo == 'GET') {
+    } else if (url === 'login' && metodo === 'GET') {
         authController.index(req, res);
-    } else if (url == 'logar' && metodo == 'POST') {
+    } else if (url === 'logar' && metodo === 'POST') {
         authController.logar(req, res);
     } else {
-        estaticoController.naoEncontrado(req, res);
+        estaticoController.procurar(req, res);
     }
 });
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
