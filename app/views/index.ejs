@@ -6,19 +6,23 @@
 
     <meta charset="UTF-8">
 
-    <script src="/app/Publico/js/areaCerca.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Página Inicial</title>
+
+    <script src="/_js/areaCerca.js"></script>
 
     <style>
+
+        .pequeno {
+
+            color: green;
+
+        }
 
         .grande {
 
             color: red;
-
-        }
-
-        .pequena {
-
-            color: green;
 
         }
 
@@ -30,15 +34,21 @@
 
     <%- include('/home/node/app/views/cabecalho.ejs') %>
 
-    <img src="/app/Publico/img/logo.png" alt="Logo IFCE">
+    <img src="/_img/logo.png" alt="Logo">
 
-    <h1>Página inicial</h1>
+    <h1>Cercas!</h1>
 
-    <form id="formCerca" action="/triacontagono" method="post" onsubmit="return calcularCerca();">
+    <p>Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.</p>
+
+    <h2>Digite abaixo os dados:</h2>
+
+    <form method="post" onSubmit="event.preventDefault(); calcularArea();">
+
+        <div id="resposta"></div>
 
         <label>
 
-            <span>Nome da Cerca</span>
+            <span>Nome</span>
 
             <input name="nome">
 
@@ -46,22 +56,45 @@
 
         <label>
 
-            <span>Lado do triacontágono (em metros)</span>
+            <span>Lado da cerca (em metros)</span>
 
             <input name="lado">
 
         </label>
 
-        <button id="botaoCalcular">Calcular</button>
+        <label>
+
+            <button>Calcular</button>
+
+        </label>
 
     </form>
 
-    <div id="resposta"></div>
+    <button onclick="listar();">Listar</button>
 
+    <table>
 
+        <tr>
 
-    <script src="/app/Publico/js/areaCerca.js"></script>
+            <th>ID</th>
+
+            <th>Nome</th>
+
+            <th>Lado</th>
+
+            <th></th>
+
+        </tr>
+
+        <tbody id="triacontagono">
+
+            
+
+        </tbody>
+
+    </table>
 
 </body>
 
 </html>
+
