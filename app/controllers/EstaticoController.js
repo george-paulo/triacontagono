@@ -1,17 +1,65 @@
+const fs = require('fs');
+
+const path = require('path');
+
+
+
 class EstaticoController {
-    naoEncontrado(req, res) {
-        res.writeHead(404, { 'Content-Type': 'text/html' });
-        res.write(`<!DOCTYPE html>
-        <html lang="pt-BR">
-        <head>
-            <meta charset="UTF-8">
-        </head>
-        <body>
-            <h1>Não encontrado!</h1>
-        </body>
-        </html>`);
-        res.end();
+
+    async procurar(req, res) {
+
+        try {
+
+            const caminho = path.normalize('../app/Publico' + req.url).replace(/^(\.\.[\/\\])+/, '');
+
+            const dados = fs.readFileSync(caminho);
+
+            res.writeHead(200);
+
+            res.write(dados);
+
+            res.end();
+
+        } catch (e) {
+
+            this.naoEncontrado(req, res);
+
+        }
+
     }
+
+
+
+    naoEncontrado(req, res) {
+
+        res.writeHead(404, { 'Content-Type': 'text/html' });
+
+        res.write(`<!DOCTYPE html>
+
+        <html lang="pt-BR">
+
+        <head>
+
+            <meta charset="UTF-8">
+
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <title>Document</title>
+
+        </head>
+
+        <body>`);
+
+        res.write('<h1>Não encontrado!</h1>');
+
+        res.write('</body>');
+
+        res.end();
+
+    }
+
 }
+
+
 
 module.exports = EstaticoController;
