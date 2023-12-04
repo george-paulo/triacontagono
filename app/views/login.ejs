@@ -10,11 +10,11 @@
         <div id="resposta"></div>
         <label>
             <span>Nome</span>
-            <input name="nome">
+            <input name="nome" required>
         </label>
         <label>
             <span>Senha</span>
-            <input name="senha" type="password">
+            <input name="senha" type="password" required>
         </label>
         <button>Ok</button>
     </form>
@@ -25,21 +25,26 @@
         let senha = document.querySelector('[name=senha]').value;
         let divResposta = document.querySelector('#resposta');
         
-        let dados = new URLSearchParams({nome, senha});
-        let resposta = await fetch('logar', {
-            method: 'post',
-            body: dados
-        });
-        let json = await resposta.json();
-        console.log(json);
-        if (resposta.status == 200) {
-            sessionStorage.setItem('token', json.token);
-            window.location = '/index';
-        }
-        else {
-            divResposta.innerText = json.mensagem;
-        }
+        try {
+            let dados = new URLSearchParams({ nome, senha });
+            let resposta = await fetch('logar', {
+                method: 'post',
+                body: dados
+            });
 
+            let json = await resposta.json();
+            console.log(json);
+
+            if (resposta.ok) {
+                sessionStorage.setItem('token', json.token);
+                window.location = '/index';
+            } else {
+                divResposta.innerText = json.mensagem || 'Erro ao fazer login';
+            }
+        } catch (error) {
+            console.error('Erro ao realizar login:', error);
+            divResposta.innerText = 'Erro ao conectar-se ao servidor';
+        }
     }
 </script>
 </html>
