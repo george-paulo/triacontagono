@@ -13,7 +13,6 @@
     <script src="/_js/areaCerca.js"></script>
 
     <style>
-
         .pequeno {
 
             color: green;
@@ -25,7 +24,6 @@
             color: red;
 
         }
-
     </style>
 
 </head>
@@ -34,67 +32,67 @@
 
     <%- include('/home/node/app/views/cabecalho.ejs') %>
 
-    <img src="/_img/logo.png" alt="Logo">
+        <img src="/_img/logo.png" alt="Logo">
 
-    <h1>Cercas!</h1>
+        <h1>Cercas!</h1>
 
-    <p>Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.</p>
+        <p>Calcule a Área de uma cerca em forma de triacontagono. Se a Área for maior que 200 metros quadrados, É uma
+            cerca grande. Se for menor que 200 metros quadrados, É uma cerca pequena.</p>
 
-    <h2>Digite abaixo os dados:</h2>
+        <h2>Digite abaixo os dados:</h2>
 
-    <form method="post" onSubmit="event.preventDefault(); calcularArea();">
+        <form method="post" onSubmit="event.preventDefault(); calcularArea();">
 
-        <div id="resposta"></div>
+            <div id="resposta"></div>
 
-        <label>
+            <label>
 
-            <span>Nome</span>
+                <span>Nome</span>
 
-            <input name="nome">
+                <input name="nome">
 
-        </label>
+            </label>
 
-        <label>
+            <label>
 
-            <span>Lado da cerca (em metros)</span>
+                <span>Lado da cerca (em metros)</span>
 
-            <input name="lado">
+                <input name="lado">
 
-        </label>
+            </label>
 
-        <label>
+            <label>
 
-            <button>Calcular</button>
+                <button>Calcular</button>
 
-        </label>
+            </label>
 
-    </form>
+        </form>
 
-    <button onclick="listar();">Listar</button>
+        <button onclick="listar();">Listar</button>
 
-    <table>
+        <table>
 
-        <tr>
+            <tr>
 
-            <th>ID</th>
+                <th>ID</th>
 
-            <th>Nome</th>
+                <th>Nome</th>
 
-            <th>Lado</th>
+                <th>Lado</th>
 
-            <th></th>
+                <th></th>
 
-        </tr>
+            </tr>
 
-        <tbody id="triacontagono">
+            <tbody id="triacontagono">
 
-            
 
-        </tbody>
 
-    </table>
+            </tbody>
+
+        </table>
 
 </body>
 
 </html>
-
