@@ -11,10 +11,11 @@ const UsuarioController = require('./controllers/UsuarioController');
 
 const mysql = require('mysql');
 
-app.use(express.static('./Publico'));
+
 const app = express();
 const PORT = 3000;
 
+app.use(express.static('./Publico'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
