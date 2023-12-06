@@ -1,7 +1,7 @@
 const Usuario = require("./Usuario")
 const bcrypt = require('bcrypt')
 
-class UsuariosDao {
+class UsuarioDao {
     constructor() {
         this.usuarios = [];
     }
@@ -26,13 +26,13 @@ class UsuariosDao {
 
     validar(usuario) {
         if (usuario.nome == '') {
-            throw new Error('mensagem_nome_em_branco');
+            throw new Error('Nome em branco');
         }
         if (!usuario.senha) {
-            throw new Error('mensagem_senha_em_branco');
+            throw new Error('Senha em branco');
         }
         if (!usuario.papel) {
-            throw new Error('mensagem_papel_em_branco');
+            throw new Error('Papel em branco');
         }
     }
     autenticar(nome, senha) {
@@ -46,4 +46,4 @@ class UsuariosDao {
 
 }
 
-module.exports = UsuariosDao;
+module.exports = UsuarioDao;

@@ -13,8 +13,8 @@ class CercaMysqlDao {
                     return reject('Erro: ' + error.message);
                 }
                 let cercas = linhas.map(linha => {
-                    let { nome, lado } = linha;
-                    return new Cerca(nome, lado);
+                    let { id, nome, lado } = linha;
+                    return new Cerca(nome, lado, id);
                 })
                 resolve(cercas);
             });

@@ -27,10 +27,11 @@ class CercaController {
             cerca.nome = query.nome;
             cerca.lado = parseFloat(query.lado);
 
-            utils.renderizarEjs(res, './views/triacontagono.ejs', cerca);
+            utils.renderizarEjs(res, './views/areaCerca.ejs', cerca);
         });
     }
 
+      
     async listar(req, res) {
         try {
             let cercas = await this.cercaDao.listar();
